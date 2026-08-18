@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import joblib
 import numpy as np
 import pandas as pd
 
@@ -153,3 +153,15 @@ if __name__ == "__main__":
 
     print("\nTest result:")
     print(result)
+
+    MODEL_PATH = MODEL_DIR / "behaviour_engine.joblib"
+    SCALER_PATH = MODEL_DIR / "behaviour_scaler.joblib"
+
+    joblib.dump(engine.model, MODEL_PATH)
+    joblib.dump(engine.scaler, SCALER_PATH)
+
+    print("\nBehaviour model saved:")
+    print(MODEL_PATH)
+
+    print("Behaviour scaler saved:")
+    print(SCALER_PATH)
