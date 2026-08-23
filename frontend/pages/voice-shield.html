@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FraudShield Voice Shield — Detect voice phishing and social-engineering attempts">
+    <title>FraudShield — Voice Shield</title>
+
+    <!-- Shared styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <!-- Voice Shield styles -->
+    <link rel="stylesheet" href="../css/voice-shield.css">
+</head>
+
+<body data-page="voice-shield" data-page-title="Voice Shield">
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+            <div class="sidebar__brand">
+                <img src="../assets/icons/shield.svg" alt="" class="sidebar__logo" width="32" height="32">
+
+                <span class="sidebar__title">FraudShield</span>
+
+                <button class="sidebar__close-btn" type="button" aria-label="Close navigation menu">
+                    <img src="../assets/icons/close.svg" alt="" width="22" height="22">
+                </button>
+            </div>
+
+            <nav class="sidebar__nav" id="sidebar-nav" aria-label="Sidebar">
+                <div data-nav-render></div>
+            </nav>
+
+        </aside>
+
+        <!-- Mobile overlay -->
+        <div class="sidebar-overlay" aria-hidden="true"></div>
+
+        <!-- Main application area -->
+        <div class="app-main">
+
+            <!-- Header -->
+            <header class="header">
+
+                <div class="header__left">
+
+                    <button class="header__menu-btn" type="button" aria-label="Open navigation menu"
+                        aria-expanded="false" aria-controls="sidebar-nav">
+                        <img src="../assets/icons/menu.svg" alt="" width="22" height="22">
+                    </button>
+
+                    <h1 class="header__page-title" data-page-title-render>
+                        Voice Shield
+                    </h1>
+
+                </div>
+
+                <div class="header__right">
+
+                    <button class="header__icon-btn header__icon-btn--has-badge" type="button"
+                        aria-label="Notifications">
+                        <img src="../assets/icons/bell.svg" alt="" width="20" height="20">
+
+                        <span class="header__badge-dot" aria-hidden="true"></span>
+                    </button>
+
+                    <div class="header__user" data-header-user-render></div>
+
+                </div>
+
+            </header>
+
+            <!-- Page content -->
+            <main class="content">
+
+                <div class="content__slot">
+
+                    <!-- Voice Shield page -->
+                    <section class="voice-page">
+
+                        <!-- Page heading -->
+                        <div class="voice-page__intro">
+
+                            <h2 class="voice-page__title">
+                                Voice Shield
+                            </h2>
+
+                            <p class="voice-page__description">
+                                Detect voice phishing and social-engineering attempts before they cause financial loss.
+                            </p>
+
+                        </div>
+
+                        <!-- Main Voice Shield layout -->
+                        <div class="voice-dashboard">
+
+                            <!-- Left column -->
+                            <div class="voice-dashboard__main">
+
+                                <!-- Analyze suspicious call -->
+                                <section class="voice-card voice-analyzer">
+
+                                    <div class="voice-card__header">
+
+                                        <h3 class="voice-card__title">
+                                            <span class="voice-card__icon">🎙</span>
+                                            Analyze a Suspicious Call
+                                        </h3>
+
+                                    </div>
+
+                                    <div class="voice-actions">
+
+                                        <button type="button" class="voice-btn voice-btn--primary" id="start-recording">
+                                            <span>○</span>
+                                            Start Recording
+                                        </button>
+
+                                        <button type="button" class="voice-btn voice-btn--secondary" id="upload-audio">
+                                            <span>▣</span>
+                                            Upload Audio
+                                        </button>
+
+                                        <input type="file" id="audio-file" accept="audio/*" hidden>
+
+                                    </div>
+
+                                    <!-- Audio preview -->
+                                    <div class="audio-preview">
+
+                                        <div class="audio-preview__top">
+
+                                            <div class="audio-preview__file">
+                                                <span class="audio-preview__file-icon">▣</span>
+
+                                                <span id="audio-file-name">
+                                                    Bank_Support_Call_01.mp3
+                                                </span>
+                                            </div>
+
+                                            <span class="audio-preview__duration" id="audio-duration">
+                                                00:00 / 00:00
+                                            </span>
+
+                                        </div>
+
+                                        <div class="audio-waveform" aria-label="Audio waveform">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+
+                                        <button type="button" class="voice-btn voice-btn--primary" id="analyze-voice">
+                                            🔍 Analyze Voice
+                                        </button>
+
+                                        <button type="button" class="voice-btn voice-btn--secondary" id="reset-voice">
+                                            ↻ New Analysis
+                                        </button>
+
+                                    </div>
+
+                                </section>
+
+                                <!-- Call transcription -->
+                                <section class="voice-card transcription-card">
+
+                                    <div class="voice-card__header">
+
+                                        <h3 class="voice-card__title">
+                                            <span class="voice-card__icon">▣</span>
+                                            Call Transcription
+                                        </h3>
+
+                                        <span class="sync-badge">
+                                            LIVE SYNC
+                                        </span>
+
+                                    </div>
+
+                                    <div class="transcription-box">
+
+                                        <div class="transcription-speaker">
+                                            Caller (External)
+                                        </div>
+
+                                        <div class="transcription-message" id="transcription-message">
+                                            No analysis available. Upload or record an audio file.
+                                        </div>
+
+                                        <div class="transcription-speaker transcription-speaker--you">
+                                            You
+                                        </div>
+
+                                    </div>
+
+                                </section>
+
+                            </div>
+
+                            <!-- Right column -->
+                            <aside class="voice-dashboard__side">
+
+                                <!-- Threat assessment -->
+                                <section class="voice-card threat-card">
+
+                                    <p class="threat-card__label">
+                                        THREAT ASSESSMENT
+                                    </p>
+
+                                    <div class="threat-score">
+                                        <strong id="threat-score">—</strong>
+                                        <span>/ 100</span>
+                                    </div>
+
+                                    <span class="risk-badge" id="risk-badge">
+                                        NOT ANALYZED
+                                    </span>
+
+                                    <div class="threat-list">
+
+                                        <div class="threat-item">
+                                            <span class="threat-item__icon">⚠</span>
+                                            <span class="threat-item__name">
+                                                OTP<br>Request
+                                            </span>
+                                            <span class="threat-item__status" id="otp-status">
+                                                -
+                                            </span>
+                                        </div>
+
+                                        <div class="threat-item">
+                                            <span class="threat-item__icon">⏱</span>
+                                            <span class="threat-item__name">
+                                                Urgency /<br>Pressure
+                                            </span>
+                                            <span class="threat-item__status" id="urgency-status">
+                                                -
+                                            </span>
+                                        </div>
+
+                                        <div class="threat-item">
+                                            <span class="threat-item__icon">⚖</span>
+                                            <span class="threat-item__name">
+                                                Threatening<br>Language
+                                            </span>
+                                            <span class="threat-item__status" id="threat-status">
+                                                -
+                                            </span>
+                                        </div>
+
+                                        <div class="threat-item">
+                                            <span class="threat-item__icon">🏦</span>
+                                            <span class="threat-item__name">
+                                                Bank<br>Impersonation
+                                            </span>
+                                            <span class="threat-item__status" id="bank-status">
+                                                -
+                                            </span>
+                                        </div>
+
+                                        <div class="threat-item threat-item--warning">
+                                            <span class="threat-item__icon">●</span>
+                                            <span class="threat-item__name">
+                                                Social<br>Engineering
+                                            </span>
+                                            <span class="threat-item__status" id="social-status">
+                                                -
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </section>
+
+                                <!-- Why suspicious -->
+                                <section class="voice-card suspicious-card">
+
+                                    <h3 class="suspicious-card__title">
+                                        💡 Why is this suspicious?
+                                    </h3>
+
+                                    <div class="suspicious-factor">
+
+                                        <div class="suspicious-factor__header">
+                                            <span>OTP Request</span>
+                                            <strong id="otp-factor">+0</strong>
+                                        </div>
+
+                                        <div class="risk-bar">
+                                            <span id="otp-risk-bar" style="width: 0%;"></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="suspicious-factor">
+
+                                        <div class="suspicious-factor__header">
+                                            <span>Urgency / Pressure</span>
+                                            <strong id="urgency-factor">+0</strong>
+                                        </div>
+
+                                        <div class="risk-bar">
+                                            <span id="urgency-risk-bar" style="width: 0%;"></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="suspicious-factor">
+
+                                        <div class="suspicious-factor__header">
+                                            <span>Bank Impersonation</span>
+                                            <strong id="bank-factor">+0</strong>
+                                        </div>
+
+                                        <div class="risk-bar">
+                                            <span id="bank-risk-bar" style="width: 0%;"></span>
+                                        </div>
+
+                                    </div>
+
+                                </section>
+
+                            </aside>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- Shared JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/mock-data.js"></script>
+    <script src="../js/main.js"></script>
+
+    <!-- Voice Shield JavaScript -->
+    <script src="../js/voice-shield.js"></script>
+
+</body>
+
+</html>

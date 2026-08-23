@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="FraudShield — Bank Review"
+  >
+
+  <title>FraudShield — Bank Review</title>
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="../css/bank-review.css">
+</head>
+
+<body data-page="bank-review" data-page-title="Bank Review">
+
+  <div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside
+      class="sidebar"
+      id="sidebar"
+      aria-label="Main navigation"
+    >
+
+      <!-- Brand -->
+      <div class="sidebar__brand">
+
+        <img
+          src="../assets/icons/shield.svg"
+          alt=""
+          class="sidebar__logo"
+          width="32"
+          height="32"
+        >
+
+        <span class="sidebar__title">
+          FraudShield
+        </span>
+
+        <button
+          class="sidebar__close-btn"
+          type="button"
+          aria-label="Close navigation menu"
+        >
+          <img
+            src="../assets/icons/close.svg"
+            alt=""
+            width="22"
+            height="22"
+          >
+        </button>
+
+      </div>
+
+
+      <!-- Navigation -->
+      <nav
+        class="sidebar__nav"
+        id="sidebar-nav"
+        aria-label="Sidebar"
+      >
+
+        <div data-nav-render></div>
+
+      </nav>
+
+    </aside>
+
+
+    <!-- Mobile overlay -->
+    <div
+      class="sidebar-overlay"
+      aria-hidden="true"
+    ></div>
+
+
+    <!-- ================= MAIN AREA ================= -->
+
+    <div class="app-main">
+
+
+      <!-- ================= HEADER ================= -->
+
+      <header class="header">
+
+        <div class="header__left">
+
+          <!-- Mobile menu -->
+          <button
+            class="header__menu-btn"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="sidebar-nav"
+          >
+
+            <img
+              src="../assets/icons/menu.svg"
+              alt=""
+              width="22"
+              height="22"
+            >
+
+          </button>
+
+
+          <!-- Page title -->
+          <h1
+            class="header__page-title"
+            data-page-title-render
+          >
+            Bank Review
+          </h1>
+
+        </div>
+
+
+        <!-- Header right -->
+        <div class="header__right">
+
+          <!-- Notification -->
+          <button
+            class="header__icon-btn header__icon-btn--has-badge"
+            type="button"
+            aria-label="Notifications"
+          >
+
+            <img
+              src="../assets/icons/bell.svg"
+              alt=""
+              width="20"
+              height="20"
+            >
+
+            <span
+              class="header__badge-dot"
+              aria-hidden="true"
+            ></span>
+
+          </button>
+
+
+          <!-- User -->
+          <div
+            class="header__user"
+            data-header-user-render
+          ></div>
+
+        </div>
+
+      </header>
+
+
+      <!-- ================= PAGE CONTENT ================= -->
+
+      <main class="content">
+
+        <div class="content__slot">
+
+
+          <!-- Page heading -->
+
+          <section class="content__header">
+
+            <h2 class="content__title">
+              Bank Review
+            </h2>
+
+            <p class="content__subtitle">
+              Review and manage transactions flagged by the FraudShield risk engine.
+            </p>
+
+          </section>
+
+
+          <!-- ================= REVIEW CONTENT ================= -->
+
+          <section class="bank-review-page">
+
+            <!-- Review summary -->
+            <div class="bank-review-stats">
+
+              <article class="bank-review-card">
+
+                <span class="bank-review-card__label">
+                  PENDING REVIEWS
+                </span>
+
+                <strong class="bank-review-card__value">
+                  12
+                </strong>
+
+                <span class="bank-review-card__status bank-review-card__status--warning">
+                  Requires attention
+                </span>
+
+              </article>
+
+
+              <article class="bank-review-card">
+
+                <span class="bank-review-card__label">
+                  HIGH RISK
+                </span>
+
+                <strong class="bank-review-card__value">
+                  5
+                </strong>
+
+                <span class="bank-review-card__status bank-review-card__status--danger">
+                  High priority
+                </span>
+
+              </article>
+
+
+              <article class="bank-review-card">
+
+                <span class="bank-review-card__label">
+                  REVIEWED TODAY
+                </span>
+
+                <strong class="bank-review-card__value">
+                  27
+                </strong>
+
+                <span class="bank-review-card__status bank-review-card__status--safe">
+                  Completed
+                </span>
+
+              </article>
+
+            </div>
+
+
+            <!-- Review table -->
+
+            <article class="bank-review-panel">
+
+              <div class="bank-review-panel__header">
+
+                <div>
+                  <h3>
+                    Transactions Awaiting Review
+                  </h3>
+
+                  <p>
+                    Transactions requiring manual verification.
+                  </p>
+                </div>
+
+                <button
+                  class="bank-review-filter"
+                  type="button"
+                >
+                  Filter
+                </button>
+
+              </div>
+
+
+              <div class="bank-review-table-wrapper">
+
+                <table class="bank-review-table">
+
+                  <thead>
+
+                    <tr>
+                      <th>Transaction</th>
+                      <th>Customer</th>
+                      <th>Amount</th>
+                      <th>Risk</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    <!-- ================= TRANSACTION 1 ================= -->
+
+                    <tr
+                      data-transaction-id="TXN-8F3A2B"
+                      data-merchant="Global Tech Supplies"
+                      data-customer="Sarah Chen"
+                      data-amount="$4,299.99"
+                      data-risk="High"
+                      data-location="New York"
+                      data-reason="Unusual transaction amount and location"
+                    >
+
+                      <td>
+                        <strong>TXN-8F3A2B</strong>
+                        <small>Global Tech Supplies</small>
+                      </td>
+
+                      <td>
+                        Sarah Chen
+                      </td>
+
+                      <td>
+                        $4,299.99
+                      </td>
+
+                      <td>
+                        <span class="risk-badge risk-badge--high">
+                          High
+                        </span>
+                      </td>
+
+                      <td>
+                        <span class="review-status review-status--pending">
+                          Pending
+                        </span>
+                      </td>
+
+                      <td>
+                        <button
+                          class="review-action"
+                          type="button"
+                        >
+                          Review
+                        </button>
+                      </td>
+
+                    </tr>
+
+
+                    <!-- ================= TRANSACTION 2 ================= -->
+
+                    <tr
+                      data-transaction-id="TXN-6D1B0A"
+                      data-merchant="Luxury Watches Ltd"
+                      data-customer="Michael Brown"
+                      data-amount="$15,750.00"
+                      data-risk="Critical"
+                      data-location="Chicago"
+                      data-reason="Extremely high transaction amount detected"
+                    >
+
+                      <td>
+                        <strong>TXN-6D1B0A</strong>
+                        <small>Luxury Watches Ltd</small>
+                      </td>
+
+                      <td>
+                        Michael Brown
+                      </td>
+
+                      <td>
+                        $15,750.00
+                      </td>
+
+                      <td>
+                        <span class="risk-badge risk-badge--critical">
+                          Critical
+                        </span>
+                      </td>
+
+                      <td>
+                        <span class="review-status review-status--pending">
+                          Pending
+                        </span>
+                      </td>
+
+                      <td>
+                        <button
+                          class="review-action"
+                          type="button"
+                        >
+                          Review
+                        </button>
+                      </td>
+
+                    </tr>
+
+
+                    <!-- ================= TRANSACTION 3 ================= -->
+
+                    <tr
+                      data-transaction-id="TXN-5C0A9F"
+                      data-merchant="CloudHost Pro"
+                      data-customer="DevOps Team Inc"
+                      data-amount="$890.00"
+                      data-risk="Medium"
+                      data-location="Boston"
+                      data-reason="Transaction pattern requires further investigation"
+                    >
+
+                      <td>
+                        <strong>TXN-5C0A9F</strong>
+                        <small>CloudHost Pro</small>
+                      </td>
+
+                      <td>
+                        DevOps Team Inc
+                      </td>
+
+                      <td>
+                        $890.00
+                      </td>
+
+                      <td>
+                        <span class="risk-badge risk-badge--medium">
+                          Medium
+                        </span>
+                      </td>
+
+                      <td>
+                        <span class="review-status review-status--review">
+                          Investigating
+                        </span>
+                      </td>
+
+                      <td>
+                        <button
+                          class="review-action"
+                          type="button"
+                        >
+                          Review
+                        </button>
+                      </td>
+
+                    </tr>
+
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </article>
+
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/bank-review.js"></script>
+
+</body>
+
+</html>

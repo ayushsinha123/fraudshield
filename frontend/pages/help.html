@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="FraudShield Help & Support">
+
+    <title>FraudShield — Help & Support</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <!-- Help & Support styles -->
+    <link rel="stylesheet" href="../css/help.css">
+</head>
+
+<body data-page="help" data-page-title="Help & Support">
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+            <div class="sidebar__brand">
+
+                <img src="../assets/icons/shield.svg" alt="" class="sidebar__logo" width="32" height="32">
+
+                <span class="sidebar__title">
+                    FraudShield
+                </span>
+
+                <button class="sidebar__close-btn" type="button" aria-label="Close navigation menu">
+                    <img src="../assets/icons/close.svg" alt="" width="22" height="22">
+                </button>
+
+            </div>
+
+            <nav class="sidebar__nav" id="sidebar-nav" aria-label="Sidebar">
+                <div data-nav-render></div>
+            </nav>
+
+        </aside>
+
+
+        <!-- Mobile overlay -->
+        <div class="sidebar-overlay" aria-hidden="true"></div>
+
+
+        <!-- Main application area -->
+        <div class="app-main">
+
+            <!-- Header -->
+            <header class="header">
+
+                <div class="header__left">
+
+                    <button class="header__menu-btn" type="button" aria-label="Open navigation menu"
+                        aria-expanded="false" aria-controls="sidebar-nav">
+                        <img src="../assets/icons/menu.svg" alt="" width="22" height="22">
+                    </button>
+
+                    <h1 class="header__page-title" data-page-title-render>
+                        Help & Support
+                    </h1>
+
+                </div>
+
+
+                <div class="header__right">
+
+                    <button class="header__icon-btn header__icon-btn--has-badge" type="button"
+                        aria-label="Notifications">
+                        <img src="../assets/icons/bell.svg" alt="" width="20" height="20">
+
+                        <span class="header__badge-dot" aria-hidden="true"></span>
+
+                    </button>
+
+                    <div class="header__user" data-header-user-render></div>
+
+                </div>
+
+            </header>
+
+            <!-- Support Modal -->
+            <div class="support-modal" id="support-modal" aria-hidden="true">
+                <div class="support-modal__overlay" data-modal-close></div>
+
+                <div class="support-modal__content" role="dialog" aria-modal="true"
+                    aria-labelledby="support-modal-title">
+
+                    <button type="button" class="support-modal__close" id="support-modal-close"
+                        aria-label="Close support form">
+                        ×
+                    </button>
+
+                    <h2 id="support-modal-title">
+                        Contact Support
+                    </h2>
+
+                    <p>
+                        Tell us about your issue and our support team will help you.
+                    </p>
+
+                    <form id="support-form">
+
+                        <div class="support-form__group">
+                            <label for="support-name">
+                                Name
+                            </label>
+
+                            <input type="text" id="support-name" placeholder="Enter your name" required>
+                        </div>
+
+                        <div class="support-form__group">
+                            <label for="support-email">
+                                Email
+                            </label>
+
+                            <input type="email" id="support-email" placeholder="Enter your email" required>
+                        </div>
+
+                        <div class="support-form__group">
+                            <label for="support-issue">
+                                Issue
+                            </label>
+
+                            <select id="support-issue" required>
+                                <option value="">Select an issue</option>
+                                <option value="transaction">Transaction Shield</option>
+                                <option value="voice">Voice Shield</option>
+                                <option value="account">Account & Settings</option>
+                                <option value="technical">Technical Issue</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="support-form__group">
+                            <label for="support-message">
+                                Message
+                            </label>
+
+                            <textarea id="support-message" rows="4" placeholder="Describe your issue..."
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="support-form__submit">
+                            Submit Request
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+            <!-- Help & Support content -->
+            <main class="content">
+
+                <div class="help-page">
+
+                    <!-- Page heading -->
+                    <div class="help-page__intro">
+
+                        <h2 class="help-page__title">
+                            Help & Support
+                        </h2>
+
+                        <p class="help-page__description">
+                            Find answers, learn how FraudShield works, or get help with an issue.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Search -->
+                    <section class="help-search">
+
+                        <div class="help-search__icon">
+                            ⌕
+                        </div>
+
+                        <input type="search" id="help-search-input" placeholder="Search for help..."
+                            aria-label="Search for help">
+
+                    </section>
+
+
+                    <!-- Quick help -->
+                    <section class="help-section">
+
+                        <h3 class="help-section__title">
+                            How can we help?
+                        </h3>
+
+                        <div class="help-options">
+
+                            <button type="button" class="help-option" id="getting-started-btn">
+
+                                <span class="help-option__icon">
+                                    ?
+                                </span>
+
+                                <span class="help-option__content">
+
+                                    <strong>
+                                        Getting Started
+                                    </strong>
+
+                                    <small>
+                                        Learn how to use FraudShield
+                                    </small>
+
+                                </span>
+
+                            </button>
+
+
+                            <button type="button" class="help-option" id="security-fraud-btn">
+
+                                <span class="help-option__icon">
+                                    🛡
+                                </span>
+
+                                <span class="help-option__content">
+
+                                    <strong>
+                                        Security & Fraud
+                                    </strong>
+
+                                    <small>
+                                        Understand alerts and risk detection
+                                    </small>
+
+                                </span>
+
+                            </button>
+
+
+                            <button type="button" class="help-option" id="account-settings-btn">
+
+                                <span class="help-option__icon">
+                                    ⚙
+                                </span>
+
+                                <span class="help-option__content">
+
+                                    <strong>
+                                        Account & Settings
+                                    </strong>
+
+                                    <small>
+                                        Manage your account and preferences
+                                    </small>
+
+                                </span>
+
+                            </button>
+
+
+                            <button type="button" class="help-option" id="voice-shield-btn">
+                                <span class="help-option__icon">
+                                    🎙
+                                </span>
+
+                                <span class="help-option__content">
+
+                                    <strong>
+                                        Voice Shield
+                                    </strong>
+
+                                    <small>
+                                        Learn about suspicious call detection
+                                    </small>
+
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- Frequently asked questions -->
+                    <section class="help-section">
+
+                        <h3 class="help-section__title">
+                            Frequently Asked Questions
+                        </h3>
+
+                        <div class="faq-list">
+
+                            <article class="faq-item">
+
+                                <button type="button" class="faq-item__question">
+                                    <span>
+                                        How does FraudShield detect suspicious transactions?
+                                    </span>
+
+                                    <span>
+                                        +
+                                    </span>
+
+                                </button>
+
+                                <div class="faq-item__answer">
+                                    FraudShield analyzes transaction behavior, device information,
+                                    transaction amount, timing, recipient history, and other risk
+                                    indicators to identify unusual activity.
+                                </div>
+
+                            </article>
+
+
+                            <article class="faq-item">
+
+                                <button type="button" class="faq-item__question">
+                                    <span>
+                                        What should I do if a transaction is flagged?
+                                    </span>
+
+                                    <span>
+                                        +
+                                    </span>
+
+                                </button>
+
+                                <div class="faq-item__answer">
+                                    Review the risk indicators carefully. If you do not recognize
+                                    the transaction, secure your account and follow the recommended
+                                    action shown by FraudShield.
+                                </div>
+
+                            </article>
+
+
+                            <article class="faq-item">
+
+                                <button type="button" class="faq-item__question">
+                                    <span>
+                                        How does Voice Shield work?
+                                    </span>
+
+                                    <span>
+                                        +
+                                    </span>
+
+                                </button>
+
+                                <div class="faq-item__answer">
+                                    Voice Shield analyzes suspicious calls for social-engineering
+                                    indicators such as urgency, OTP requests, threatening language,
+                                    and bank impersonation.
+                                </div>
+
+                            </article>
+
+
+                            <article class="faq-item">
+
+                                <button type="button" class="faq-item__question">
+                                    <span>
+                                        How can I contact support?
+                                    </span>
+
+                                    <span>
+                                        +
+                                    </span>
+
+                                </button>
+
+                                <div class="faq-item__answer">
+                                    If you need additional assistance, contact the FraudShield
+                                    support team using the support options provided below.
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- Contact support -->
+                    <section class="help-contact">
+
+                        <div class="help-contact__content">
+
+                            <h3>
+                                Still need help?
+                            </h3>
+
+                            <p>
+                                Our support team is here to help you with security concerns
+                                and account-related questions.
+                            </p>
+
+                        </div>
+
+                        <button type="button" class="help-contact__button" id="contact-support-btn">
+                            Contact Support
+                        </button>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- Shared JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/mock-data.js"></script>
+    <script src="../js/main.js"></script>
+
+    <!-- Help & Support JavaScript -->
+    <script src="../js/help.js"></script>
+
+</body>
+
+</html>

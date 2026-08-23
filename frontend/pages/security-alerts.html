@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FraudShield Risk Analysis">
+    <title>FraudShield — Security Alerts</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/security-alerts.css">
+</head>
+
+<body data-page="security-alerts" data-page-title="Security Alerts">
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+            <div class="sidebar__brand">
+                <img src="../assets/icons/shield.svg" alt="" class="sidebar__logo" width="32" height="32">
+
+                <span class="sidebar__title">FraudShield</span>
+
+                <button class="sidebar__close-btn" type="button" aria-label="Close navigation menu">
+                    <img src="../assets/icons/close.svg" alt="" width="22" height="22">
+                </button>
+            </div>
+
+            <nav class="sidebar__nav" id="sidebar-nav" aria-label="Sidebar">
+                <div data-nav-render></div>
+            </nav>
+
+        </aside>
+
+        <!-- Mobile overlay -->
+        <div class="sidebar-overlay" aria-hidden="true"></div>
+
+        <!-- Main -->
+        <div class="app-main">
+
+            <!-- Header -->
+            <header class="header">
+
+                <div class="header__left">
+
+                    <button class="header__menu-btn" type="button" aria-label="Open navigation menu"
+                        aria-expanded="false" aria-controls="sidebar-nav">
+                        <img src="../assets/icons/menu.svg" alt="" width="22" height="22">
+                    </button>
+
+                    <div class="risk-search">
+                        <span class="risk-search__icon">⌕</span>
+                        <input type="search" placeholder="Search transactions..." aria-label="Search transactions">
+                    </div>
+
+                </div>
+
+                <div class="header__right">
+
+                    <button class="header__icon-btn header__icon-btn--has-badge" type="button"
+                        aria-label="Notifications">
+                        <img src="../assets/icons/bell.svg" alt="" width="20" height="20">
+                        <span class="header__badge-dot" aria-hidden="true"></span>
+                    </button>
+
+                    <button class="risk-header-icon" type="button" aria-label="History">
+                        ↻
+                    </button>
+
+                    <button class="risk-header-icon" type="button" aria-label="Help">
+                        ?
+                    </button>
+
+                    <div class="header__user" data-header-user-render></div>
+
+                </div>
+
+            </header>
+
+            <!-- Security Alerts -->
+            <main class="content">
+
+                <div class="alerts-page">
+
+                    <!-- Page heading -->
+                    <div class="alerts-page__heading">
+
+                        <div>
+                            <h1 class="alerts-page__title">
+                                Security Alerts
+                            </h1>
+
+                            <p class="alerts-page__description">
+                                Stay informed about suspicious activity detected by FraudShield.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Summary cards -->
+                    <div class="alerts-summary">
+
+                        <div class="alert-summary-card">
+                            <span class="alert-summary-card__label">
+                                High Risk
+                            </span>
+
+                            <strong class="alert-summary-card__value">
+                                3
+                            </strong>
+                        </div>
+
+                        <div class="alert-summary-card">
+                            <span class="alert-summary-card__label">
+                                Medium Risk
+                            </span>
+
+                            <strong class="alert-summary-card__value">
+                                5
+                            </strong>
+                        </div>
+
+                        <div class="alert-summary-card">
+                            <span class="alert-summary-card__label">
+                                Resolved
+                            </span>
+
+                            <strong class="alert-summary-card__value">
+                                12
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="alerts-toolbar">
+
+                        <div class="alerts-filters">
+
+                            <button type="button" class="alert-filter alert-filter--active">
+                                All
+                            </button>
+
+                            <button type="button" class="alert-filter">
+                                High Risk
+                            </button>
+
+                            <button type="button" class="alert-filter">
+                                Medium Risk
+                            </button>
+
+                            <button type="button" class="alert-filter">
+                                Resolved
+                            </button>
+
+                        </div>
+
+                        <div class="alerts-search">
+
+                            <span>⌕</span>
+
+                            <input type="search" placeholder="Search alerts..." aria-label="Search alerts">
+
+                        </div>
+
+                        <button type="button" class="alerts-date">
+                            ▣ Date
+                        </button>
+
+                    </div>
+
+                    <!-- Alerts layout -->
+                    <div class="alerts-layout">
+
+                        <!-- Alert list -->
+                        <div class="alerts-list">
+
+                            <!-- Alert 1 -->
+                            <article class="alert-card alert-card--high">
+
+                                <div class="alert-card__top">
+
+                                    <span class="alert-card__type">
+                                        HIGH RISK
+                                    </span>
+
+                                    <span class="alert-card__time">
+                                        2 min ago
+                                    </span>
+
+                                </div>
+
+                                <h3 class="alert-card__title">
+                                    Suspicious UPI Transaction
+                                </h3>
+
+                                <p class="alert-card__description">
+                                    ₹30,000 sent to a new recipient from an untrusted device.
+                                </p>
+
+                                <div class="alert-card__meta">
+
+                                    <span>
+                                        UPI
+                                    </span>
+
+                                    <span>
+                                        New Device
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+                            <!-- Alert 2 -->
+                            <article class="alert-card alert-card--medium">
+
+                                <div class="alert-card__top">
+
+                                    <span class="alert-card__type">
+                                        MEDIUM RISK
+                                    </span>
+
+                                    <span class="alert-card__time">
+                                        18 min ago
+                                    </span>
+
+                                </div>
+
+                                <h3 class="alert-card__title">
+                                    Unusual Login Activity
+                                </h3>
+
+                                <p class="alert-card__description">
+                                    Login detected from a location that differs from your usual activity.
+                                </p>
+
+                                <div class="alert-card__meta">
+
+                                    <span>
+                                        Login
+                                    </span>
+
+                                    <span>
+                                        New Location
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+                            <!-- Alert 3 -->
+                            <article class="alert-card alert-card--resolved">
+
+                                <div class="alert-card__top">
+
+                                    <span class="alert-card__type">
+                                        RESOLVED
+                                    </span>
+
+                                    <span class="alert-card__time">
+                                        1 hr ago
+                                    </span>
+
+                                </div>
+
+                                <h3 class="alert-card__title">
+                                    Multiple Failed Login Attempts
+                                </h3>
+
+                                <p class="alert-card__description">
+                                    Several unsuccessful login attempts were detected and blocked.
+                                </p>
+
+                                <div class="alert-card__meta">
+
+                                    <span>
+                                        Account Security
+                                    </span>
+
+                                    <span>
+                                        Blocked
+                                    </span>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                        <!-- Alert details -->
+                        <aside class="alerts-details">
+
+                            <div class="alert-details__header">
+
+                                <div>
+                                    <span class="alert-details__label">
+                                        HIGH RISK ALERT
+                                    </span>
+
+                                    <h2 class="alert-details__title">
+                                        Suspicious UPI Transaction
+                                    </h2>
+
+                                    <p class="alert-details__time">
+                                        Detected 2 minutes ago
+                                    </p>
+                                </div>
+
+                                <span class="alert-details__risk">
+                                    84 / 100
+                                </span>
+
+                            </div>
+
+
+                            <!-- Alert information -->
+                            <div class="alert-details__section">
+
+                                <h3>
+                                    Alert Details
+                                </h3>
+
+                                <div class="alert-details__grid">
+
+                                    <div>
+                                        <span>Amount</span>
+                                        <strong>₹30,000</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Transaction Type</span>
+                                        <strong>UPI</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Recipient</span>
+                                        <strong>Rohit Kumar</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Location</span>
+                                        <strong>Bengaluru, India</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Device</span>
+                                        <strong>Vivo V29</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Time</span>
+                                        <strong>02:17 AM</strong>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Why flagged -->
+                            <div class="alert-details__section">
+
+                                <h3>
+                                    Why was this flagged?
+                                </h3>
+
+                                <p>
+                                    FraudShield detected several unusual characteristics
+                                    that differ significantly from your normal transaction
+                                    behavior.
+                                </p>
+
+                                <ul class="alert-details__reasons">
+
+                                    <li>
+                                        New and untrusted device
+                                    </li>
+
+                                    <li>
+                                        Unusually large transaction amount
+                                    </li>
+
+                                    <li>
+                                        New recipient with no previous transactions
+                                    </li>
+
+                                    <li>
+                                        Transaction occurred at an unusual time
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+
+                            <!-- Recommended action -->
+                            <div class="alert-details__section alert-details__recommendation">
+
+                                <h3>
+                                    Recommended Action
+                                </h3>
+
+                                <p>
+                                    Review this transaction immediately. If you do not
+                                    recognize it, block the transaction and secure your account.
+                                </p>
+
+                            </div>
+
+
+                            <!-- Actions -->
+                            <div class="alert-details__actions">
+
+                                <button type="button" class="alerts-btn alerts-btn--primary">
+                                    Review Risk
+                                </button>
+
+                                <button type="button" class="alerts-btn alerts-btn--secondary">
+                                    Mark as Resolved
+                                </button>
+
+                            </div>
+
+                        </aside>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/mock-data.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/security-alerts.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FraudShield — Intelligent fraud detection for modern fintech">
+  <title>FraudShield — Dashboard</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="dashboard" data-page-title="Dashboard">
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar__brand">
+        <img src="assets/icons/shield.svg" alt="" class="sidebar__logo" width="32" height="32">
+        <span class="sidebar__title">FraudShield</span>
+        <button class="sidebar__close-btn" type="button" aria-label="Close navigation menu">
+          <img src="assets/icons/close.svg" alt="" width="22" height="22">
+        </button>
+      </div>
+
+      <nav class="sidebar__nav" id="sidebar-nav" aria-label="Sidebar">
+        <div data-nav-render></div>
+      </nav>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main area -->
+    <div class="app-main">
+
+      <!-- Top bar -->
+      <header class="header">
+        <div class="header__left">
+          <button class="header__menu-btn" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="sidebar-nav">
+            <img src="assets/icons/menu.svg" alt="" width="22" height="22">
+          </button>
+          <h1 class="header__page-title" data-page-title-render>Dashboard</h1>
+        </div>
+
+        <div class="header__right">
+          <button class="header__icon-btn header__icon-btn--has-badge" type="button" aria-label="Notifications">
+            <img src="assets/icons/bell.svg" alt="" width="20" height="20">
+            <span class="header__badge-dot" aria-hidden="true"></span>
+          </button>
+
+          <div class="header__user" data-header-user-render></div>
+        </div>
+      </header>
+
+      <!-- Page content slot — individual pages inject content here -->
+<main class="content">
+  <div class="content__slot" id="page-content">
+
+    <!-- Dashboard Overview Cards -->
+    <section class="dashboard-stats">
+
+      <article class="dashboard-card">
+        <div class="dashboard-card__label">OVERALL RISK TODAY</div>
+        <div class="dashboard-card__value">32<span>/100</span></div>
+        <div class="dashboard-card__status dashboard-card__status--warning">
+          <span></span> Medium Risk
+        </div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="dashboard-card__label">TRANSACTIONS ANALYZED</div>
+        <div class="dashboard-card__value">128</div>
+        <div class="dashboard-card__status dashboard-card__status--safe">
+          ↑ 12% from yesterday
+        </div>
+        <div class="dashboard-mini-chart dashboard-mini-chart--green"></div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="dashboard-card__label">HIGH RISK ALERTS</div>
+        <div class="dashboard-card__value">15</div>
+        <div class="dashboard-card__status dashboard-card__status--danger">
+          ↑ 7% from yesterday
+        </div>
+        <div class="dashboard-mini-chart dashboard-mini-chart--red"></div>
+      </article>
+
+      <article class="dashboard-card">
+        <div class="dashboard-card__label">VOICES ANALYZED</div>
+        <div class="dashboard-card__value">43</div>
+        <div class="dashboard-card__status dashboard-card__status--accent">
+          ↑ 18% from yesterday
+        </div>
+        <div class="dashboard-mini-chart dashboard-mini-chart--purple"></div>
+      </article>
+
+    </section>
+
+
+    <!-- Middle Dashboard -->
+    <section class="dashboard-middle">
+
+      <!-- Risk Distribution -->
+      <article class="dashboard-panel risk-distribution">
+        <div class="dashboard-panel__header">
+          <h2>Risk Distribution</h2>
+        </div>
+
+        <div class="risk-distribution__body">
+
+          <div class="risk-donut">
+            <div class="risk-donut__inner"></div>
+          </div>
+
+          <div class="risk-legend">
+
+            <div class="risk-legend__item">
+              <span class="risk-dot risk-dot--safe"></span>
+              <div>
+                <strong>Low Risk</strong>
+                <small>(0–30)</small>
+              </div>
+              <b>52%</b>
+            </div>
+
+            <div class="risk-legend__item">
+              <span class="risk-dot risk-dot--medium"></span>
+              <div>
+                <strong>Medium Risk</strong>
+                <small>(31–70)</small>
+              </div>
+              <b>33%</b>
+            </div>
+
+            <div class="risk-legend__item">
+              <span class="risk-dot risk-dot--high"></span>
+              <div>
+                <strong>High Risk</strong>
+                <small>(71–100)</small>
+              </div>
+              <b>15%</b>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+
+      <!-- Risk Trend -->
+      <article class="dashboard-panel risk-trend">
+        <div class="dashboard-panel__header">
+          <h2>Risk Trend <small>(Last 7 Days)</small></h2>
+        </div>
+
+        <div class="risk-chart">
+          <div class="risk-chart__line"></div>
+
+          <div class="risk-chart__labels">
+            <span>8 Aug</span>
+            <span>9 Aug</span>
+            <span>10 Aug</span>
+            <span>11 Aug</span>
+            <span>12 Aug</span>
+            <span>13 Aug</span>
+            <span>14 Aug</span>
+          </div>
+        </div>
+      </article>
+
+
+      <!-- Risk Engine -->
+      <article class="dashboard-panel risk-engine">
+        <div class="dashboard-panel__header">
+          <h2>Risk Engine Status</h2>
+        </div>
+
+        <div class="engine-list">
+
+          <div>
+            <span class="engine-check">✓</span>
+            <span>Transaction Analysis</span>
+            <b>ACTIVE</b>
+          </div>
+
+          <div>
+            <span class="engine-check">✓</span>
+            <span>Behavior Analysis</span>
+            <b>ACTIVE</b>
+          </div>
+
+          <div>
+            <span class="engine-check">✓</span>
+            <span>Device Analysis</span>
+            <b>ACTIVE</b>
+          </div>
+
+          <div>
+            <span class="engine-check">✓</span>
+            <span>Voice Analysis</span>
+            <b>ACTIVE</b>
+          </div>
+
+          <div>
+            <span class="engine-check">✓</span>
+            <span>Fraud Intelligence</span>
+            <b>ACTIVE</b>
+          </div>
+
+        </div>
+      </article>
+
+    </section>
+
+
+    <!-- Bottom Dashboard -->
+    <section class="dashboard-bottom">
+
+      <!-- Risk Factors -->
+      <article class="dashboard-panel risk-factors">
+
+        <div class="dashboard-panel__header">
+          <h2>Top Risk Factors Detected</h2>
+        </div>
+
+        <div class="risk-factor">
+          <div>
+            <span>New Device</span>
+            <b>35%</b>
+          </div>
+          <div class="risk-bar">
+            <span style="width:35%"></span>
+          </div>
+        </div>
+
+        <div class="risk-factor">
+          <div>
+            <span>Unusual Amount</span>
+            <b>28%</b>
+          </div>
+          <div class="risk-bar risk-bar--yellow">
+            <span style="width:28%"></span>
+          </div>
+        </div>
+
+        <div class="risk-factor">
+          <div>
+            <span>New Recipient</span>
+            <b>22%</b>
+          </div>
+          <div class="risk-bar risk-bar--yellow">
+            <span style="width:22%"></span>
+          </div>
+        </div>
+
+        <div class="risk-factor">
+          <div>
+            <span>Unusual Time</span>
+            <b>15%</b>
+          </div>
+          <div class="risk-bar risk-bar--green">
+            <span style="width:15%"></span>
+          </div>
+        </div>
+
+      </article>
+
+
+      <!-- Protection Score -->
+      <article class="dashboard-panel protection-score">
+
+        <div class="dashboard-panel__header">
+          <h2>Your Protection Score</h2>
+        </div>
+
+        <div class="score-circle">
+          <div>
+            <strong>78</strong>
+            <span>/100</span>
+          </div>
+        </div>
+
+        <h3>Good</h3>
+        <p>✓ You are well protected!</p>
+
+      </article>
+
+    </section>
+
+  </div>
+</main>
+
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

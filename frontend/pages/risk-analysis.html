@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FraudShield Risk Analysis">
+  <title>FraudShield — Risk Analysis</title>
+
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/responsive.css">
+</head>
+
+<body data-page="risk-analysis" data-page-title="Risk Analysis">
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+      <div class="sidebar__brand">
+        <img
+          src="assets/icons/shield.svg"
+          alt=""
+          class="sidebar__logo"
+          width="32"
+          height="32"
+        >
+
+        <span class="sidebar__title">FraudShield</span>
+
+        <button
+          class="sidebar__close-btn"
+          type="button"
+          aria-label="Close navigation menu"
+        >
+          <img src="../assets/icons/shield.svg" alt="" width="22" height="22">
+        </button>
+      </div>
+
+      <nav class="sidebar__nav" id="sidebar-nav" aria-label="Sidebar">
+        <div data-nav-render></div>
+      </nav>
+
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main -->
+    <div class="app-main">
+
+      <!-- Header -->
+      <header class="header">
+
+        <div class="header__left">
+
+          <button
+            class="header__menu-btn"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="sidebar-nav"
+          >
+            <img src="assets/icons/menu.svg" alt="" width="22" height="22">
+          </button>
+
+          <div class="risk-search">
+            <span class="risk-search__icon">⌕</span>
+            <input
+              type="search"
+              placeholder="Search transactions..."
+              aria-label="Search transactions"
+            >
+          </div>
+
+        </div>
+
+        <div class="header__right">
+
+          <button
+            class="header__icon-btn header__icon-btn--has-badge"
+            type="button"
+            aria-label="Notifications"
+          >
+            <img src="assets/icons/bell.svg" alt="" width="20" height="20">
+            <span class="header__badge-dot" aria-hidden="true"></span>
+          </button>
+
+          <button
+            class="risk-header-icon"
+            type="button"
+            aria-label="History"
+          >
+            ↻
+          </button>
+
+          <button
+            class="risk-header-icon"
+            type="button"
+            aria-label="Help"
+          >
+            ?
+          </button>
+
+          <div class="header__user" data-header-user-render></div>
+
+        </div>
+
+      </header>
+
+      <!-- Risk Analysis -->
+      <main class="content">
+
+        <div class="risk-page">
+
+          <!-- Page heading -->
+          <div class="risk-page__heading">
+
+            <div>
+              <h1 class="risk-page__title">Risk Analysis</h1>
+              <p class="risk-page__transaction">
+                Transaction #TXN-48291
+              </p>
+            </div>
+
+            <span class="risk-status">
+              ● UNDER REVIEW
+            </span>
+
+          </div>
+
+          <!-- Main grid -->
+          <div class="risk-layout">
+
+            <!-- Left column -->
+            <div class="risk-main-column">
+
+              <!-- Transaction details -->
+              <section class="risk-card">
+
+                <h2 class="risk-card__title">
+                  Transaction Details
+                </h2>
+
+                <div class="transaction-details">
+
+                  <div class="transaction-detail">
+                    <span class="transaction-detail__label">
+                      RECIPIENT
+                    </span>
+
+                    <strong>Rohit Kumar</strong>
+
+                    <small>rohit@ybl</small>
+                  </div>
+
+                  <div class="transaction-detail">
+                    <span class="transaction-detail__label">
+                      AMOUNT
+                    </span>
+
+                    <strong class="amount">₹30,000</strong>
+
+                    <small>UPI</small>
+                  </div>
+
+                  <div class="transaction-detail">
+                    <span class="transaction-detail__label">
+                      TIME &amp; LOCATION
+                    </span>
+
+                    <strong class="danger-text">02:17 AM</strong>
+
+                    <small>Bengaluru, India</small>
+                  </div>
+
+                  <div class="transaction-detail">
+                    <span class="transaction-detail__label">
+                      DEVICE
+                    </span>
+
+                    <strong class="danger-text">
+                      ⚠ New Device
+                    </strong>
+
+                    <small>Vivo V29</small>
+                  </div>
+
+                </div>
+
+              </section>
+
+              <!-- Behavioral analysis -->
+              <section class="risk-card">
+
+                <h2 class="risk-card__title">
+                  Behavioral Pattern Analysis
+                </h2>
+
+                <div class="behavior-grid">
+
+                  <!-- Usual behavior -->
+                  <div class="behavior-column">
+
+                    <h3 class="behavior-column__title">
+                      ◉ Your usual behavior
+                    </h3>
+
+                    <div class="behavior-row">
+                      <span>Avg. Amount</span>
+                      <strong>₹2,500</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Active Hours</span>
+                      <strong>9 AM – 10 PM</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Devices</span>
+                      <strong>2 Trusted</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Recipients</span>
+                      <strong>Known Network</strong>
+                    </div>
+
+                  </div>
+
+                  <!-- Current transaction -->
+                  <div class="behavior-column behavior-column--current">
+
+                    <h3 class="behavior-column__title">
+                      <span class="danger-text">!</span>
+                      Current transaction
+                    </h3>
+
+                    <div class="behavior-row">
+                      <span>Amount</span>
+                      <strong class="danger-text">₹30,000</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Time</span>
+                      <strong class="danger-text">02:17 AM</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Device</span>
+                      <strong class="danger-text">New (Untrusted)</strong>
+                    </div>
+
+                    <div class="behavior-row">
+                      <span>Recipient</span>
+                      <strong class="danger-text">New (0 prior txns)</strong>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </section>
+
+            </div>
+
+            <!-- Right column -->
+            <aside class="risk-side-column">
+
+              <!-- Risk score -->
+              <section class="risk-card risk-score-card">
+
+                <p class="risk-card__eyebrow">
+                  AI RISK ASSESSMENT
+                </p>
+
+                <div class="risk-score">
+
+                  <div class="risk-score__circle">
+
+                    <div class="risk-score__value">
+                      84
+                      <span>/ 100</span>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <span class="risk-level">
+                  HIGH RISK
+                </span>
+
+              </section>
+
+              <!-- Why risky -->
+              <section class="risk-card risk-reason-card">
+
+                <h2 class="risk-card__title">
+                  ♧ Why is this risky?
+                </h2>
+
+                <p class="risk-reason-card__text">
+                  This transaction differs significantly from your usual
+                  payment behavior. We detected multiple risk indicators
+                  before the payment was completed.
+                </p>
+
+                <div class="risk-factors">
+
+                  <div class="risk-factor">
+                    <div class="risk-factor__header">
+                      <span>New Device</span>
+                      <strong>+24</strong>
+                    </div>
+
+                    <div class="risk-factor__bar">
+                      <span style="width: 80%;"></span>
+                    </div>
+                  </div>
+
+                  <div class="risk-factor">
+                    <div class="risk-factor__header">
+                      <span>Unusually Large Amount</span>
+                      <strong>+21</strong>
+                    </div>
+
+                    <div class="risk-factor__bar">
+                      <span style="width: 70%;"></span>
+                    </div>
+                  </div>
+
+                  <div class="risk-factor">
+                    <div class="risk-factor__header">
+                      <span>New Recipient</span>
+                      <strong>+18</strong>
+                    </div>
+
+                    <div class="risk-factor__bar">
+                      <span style="width: 60%;"></span>
+                    </div>
+                  </div>
+
+                  <div class="risk-factor">
+                    <div class="risk-factor__header">
+                      <span>Unusual Transaction Time</span>
+                      <strong>+13</strong>
+                    </div>
+
+                    <div class="risk-factor__bar">
+                      <span style="width: 45%;"></span>
+                    </div>
+                  </div>
+
+                  <div class="risk-factor">
+                    <div class="risk-factor__header">
+                      <span>Past Behavior Deviation</span>
+                      <strong>+8</strong>
+                    </div>
+
+                    <div class="risk-factor__bar">
+                      <span style="width: 30%;"></span>
+                    </div>
+                  </div>
+
+                </div>
+
+              </section>
+
+            </aside>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+<script src="../js/utils.js"></script>
+<script src="../js/mock-data.js"></script>
+<script src="../js/main.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="FraudShield — New Transaction"
+  >
+
+  <title>FraudShield — New Transaction</title>
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/new-transaction.css">
+</head>
+
+<body data-page="new-transaction" data-page-title="New Transaction">
+
+  <div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside
+      class="sidebar"
+      id="sidebar"
+      aria-label="Main navigation"
+    >
+
+      <div class="sidebar__brand">
+
+        <img
+          src="../assets/icons/shield.svg"
+          alt=""
+          class="sidebar__logo"
+          width="32"
+          height="32"
+        >
+
+        <span class="sidebar__title">
+          FraudShield
+        </span>
+
+        <button
+          class="sidebar__close-btn"
+          type="button"
+          aria-label="Close navigation menu"
+        >
+          <img
+            src="../assets/icons/close.svg"
+            alt=""
+            width="22"
+            height="22"
+          >
+        </button>
+
+      </div>
+
+      <nav
+        class="sidebar__nav"
+        id="sidebar-nav"
+        aria-label="Sidebar"
+      >
+        <div data-nav-render></div>
+      </nav>
+
+    </aside>
+
+
+    <!-- Mobile overlay -->
+    <div
+      class="sidebar-overlay"
+      aria-hidden="true"
+    ></div>
+
+
+    <!-- ================= MAIN AREA ================= -->
+
+    <div class="app-main">
+
+      <!-- ================= HEADER ================= -->
+
+      <header class="header">
+
+        <div class="header__left">
+
+          <button
+            class="header__menu-btn"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="sidebar-nav"
+          >
+            <img
+              src="../assets/icons/menu.svg"
+              alt=""
+              width="22"
+              height="22"
+            >
+          </button>
+
+          <h1
+            class="header__page-title"
+            data-page-title-render
+          >
+            New Transaction
+          </h1>
+
+        </div>
+
+
+        <div class="header__right">
+
+          <button
+            class="header__icon-btn header__icon-btn--has-badge"
+            type="button"
+            aria-label="Notifications"
+          >
+            <img
+              src="../assets/icons/bell.svg"
+              alt=""
+              width="20"
+              height="20"
+            >
+
+            <span
+              class="header__badge-dot"
+              aria-hidden="true"
+            ></span>
+
+          </button>
+
+          <div
+            class="header__user"
+            data-header-user-render
+          ></div>
+
+        </div>
+
+      </header>
+
+
+      <!-- ================= PAGE CONTENT ================= -->
+
+      <main class="content">
+
+        <div class="content__slot">
+
+          <section class="content__header">
+
+            <h2 class="content__title">
+              New Transaction
+            </h2>
+
+            <p class="content__subtitle">
+              Enter transaction details to analyze the transaction for potential fraud risk.
+            </p>
+
+          </section>
+
+
+          <!-- ================= TRANSACTION FORM ================= -->
+
+          <section class="new-transaction-page">
+
+            <article class="new-transaction-panel">
+
+              <div class="new-transaction-panel__header">
+
+                <div>
+                  <h3>
+                    Transaction Details
+                  </h3>
+
+                  <p>
+                    Provide the transaction information below.
+                  </p>
+                </div>
+
+              </div>
+
+
+              <form
+                class="new-transaction-form"
+                id="new-transaction-form"
+              >
+
+                <div class="form-group">
+
+                  <label for="merchant">
+                    Merchant
+                  </label>
+
+                  <input
+                    type="text"
+                    id="merchant"
+                    name="merchant"
+                    placeholder="Enter merchant name"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="customer">
+                    Customer
+                  </label>
+
+                  <input
+                    type="text"
+                    id="customer"
+                    name="customer"
+                    placeholder="Enter customer name"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-row">
+
+                  <div class="form-group">
+
+                    <label for="amount">
+                      Amount
+                    </label>
+
+                    <input
+                      type="number"
+                      id="amount"
+                      name="amount"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      required
+                    >
+
+                  </div>
+
+
+                  <div class="form-group">
+
+                    <label for="currency">
+                      Currency
+                    </label>
+
+                    <select
+                      id="currency"
+                      name="currency"
+                    >
+                      <option value="USD">USD — US Dollar</option>
+                      <option value="INR">INR — Indian Rupee</option>
+                      <option value="EUR">EUR — Euro</option>
+                      <option value="GBP">GBP — British Pound</option>
+                    </select>
+
+                  </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                  <div class="form-group">
+
+                    <label for="location">
+                      Location
+                    </label>
+
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      placeholder="Enter transaction location"
+                      required
+                    >
+
+                  </div>
+
+
+                  <div class="form-group">
+
+                    <label for="category">
+                      Category
+                    </label>
+
+                    <select
+                      id="category"
+                      name="category"
+                    >
+                      <option value="shopping">Shopping</option>
+                      <option value="technology">Technology</option>
+                      <option value="travel">Travel</option>
+                      <option value="food">Food & Dining</option>
+                      <option value="services">Services</option>
+                      <option value="other">Other</option>
+                    </select>
+
+                  </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="description">
+                    Transaction Description
+                  </label>
+
+                  <textarea
+                    id="description"
+                    name="description"
+                    rows="4"
+                    placeholder="Add any additional transaction details..."
+                  ></textarea>
+
+                </div>
+
+
+                <div class="new-transaction-form__actions">
+
+                  <button
+                    type="reset"
+                    class="btn btn--secondary"
+                  >
+                    Clear
+                  </button>
+
+                  <button
+                    type="submit"
+                    class="btn btn--primary"
+                  >
+                    Analyze Transaction
+                  </button>
+
+                </div>
+
+              </form>
+
+            </article>
+
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  <script src="../js/utils.js"></script>
+<script src="../js/mock-data.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/new-transaction.js"></script>
+
+</body>
+
+</html>
