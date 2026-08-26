@@ -1,8 +1,6 @@
-# backend/app/services/transaction_model.py
+from __future__ import annotations
 
 import json
-
-from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -588,28 +586,49 @@ class TransactionModel:
                 )
 
             elif feature == "type_TRANSFER":
-                reasons.append(
-                    "Transfer transaction contributes "
-                    "to elevated risk"
-                )
+                if int(
+                    X.iloc[0]["type_TRANSFER"]
+                ) == 1:
+                    reasons.append(
+                        "Transfer transaction contributes "
+                        "to elevated risk"
+                    )
 
             elif feature == "type_CASH_OUT":
-                reasons.append(
-                    "Cash-out transaction contributes "
-                    "to elevated risk"
-                )
+                if int(
+                    X.iloc[0]["type_CASH_OUT"]
+                ) == 1:
+                    reasons.append(
+                        "Cash-out transaction contributes "
+                        "to elevated risk"
+                    )
 
             elif feature == "type_PAYMENT":
-                reasons.append(
-                    "Payment transaction contributes "
-                    "to elevated risk"
-                )
+                if int(
+                    X.iloc[0]["type_PAYMENT"]
+                ) == 1:
+                    reasons.append(
+                        "Payment transaction contributes "
+                        "to elevated risk"
+                    )
 
             elif feature == "type_CASH_IN":
-                reasons.append(
-                    "Cash-in transaction contributes "
-                    "to elevated risk"
-                )
+                if int(
+                    X.iloc[0]["type_CASH_IN"]
+                ) == 1:
+                    reasons.append(
+                        "Cash-in transaction contributes "
+                        "to elevated risk"
+                    )
+
+            elif feature == "type_DEBIT":
+                if int(
+                    X.iloc[0]["type_DEBIT"]
+                ) == 1:
+                    reasons.append(
+                        "Debit transaction contributes "
+                        "to elevated risk"
+                    )
 
         if not reasons:
             reasons.append(
