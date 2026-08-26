@@ -1,0 +1,595 @@
+/* =========================================================
+   FRAUDSHIELD SETTINGS PAGE
+   ========================================================= */
+
+.settings-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.settings-page__header {
+  margin-bottom: var(--space-6);
+}
+
+.settings-page__header .content__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+}
+
+
+/* =========================================================
+   SETTINGS CARD
+   ========================================================= */
+
+.settings-card {
+  margin-bottom: var(--space-4);
+}
+
+.settings-card .card__header {
+  margin-bottom: var(--space-5);
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.settings-profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.settings-profile__avatar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-profile__avatar .avatar {
+  background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    #7B6AD9 100%
+  );
+
+  color: var(--text-primary);
+}
+
+.settings-profile__avatar h4 {
+  margin: 0 0 4px;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+}
+
+.settings-profile__avatar p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.settings-profile__form {
+  width: 100%;
+}
+
+.settings-profile__form .form-row {
+  margin-bottom: var(--space-2);
+}
+
+.settings-profile__form .form-group {
+  margin-bottom: var(--space-4);
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.settings-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+
+/* =========================================================
+   SETTINGS LIST
+   ========================================================= */
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 72px;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.settings-row:first-child {
+  padding-top: 0;
+}
+
+.settings-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   SETTINGS ICON
+   ========================================================= */
+
+.settings-row__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border-radius: var(--radius-md);
+
+  background-color: var(--accent-muted);
+  color: var(--accent);
+}
+
+.settings-row__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* =========================================================
+   SETTINGS CONTENT
+   ========================================================= */
+
+.settings-row__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row__content strong {
+  display: block;
+  margin-bottom: 4px;
+
+  color: var(--text-primary);
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+
+.settings-row__content span {
+  display: block;
+
+  color: var(--text-secondary);
+
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.toggle {
+  position: relative;
+
+  display: inline-flex;
+
+  width: 44px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+}
+
+.toggle input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle__slider {
+  position: absolute;
+  inset: 0;
+
+  border-radius: var(--radius-full);
+
+  background-color: var(--border-strong);
+
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.toggle__slider::before {
+  content: "";
+
+  position: absolute;
+
+  width: 18px;
+  height: 18px;
+
+  left: 3px;
+  top: 3px;
+
+  border-radius: 50%;
+
+  background-color: var(--text-primary);
+
+  box-shadow: var(--shadow-sm);
+
+  transition: transform var(--transition-fast);
+}
+
+.toggle input:checked + .toggle__slider {
+  background-color: var(--accent);
+}
+
+.toggle input:checked + .toggle__slider::before {
+  transform: translateX(20px);
+}
+
+.toggle input:focus-visible + .toggle__slider {
+  box-shadow: 0 0 0 3px var(--accent-muted);
+}
+
+
+/* =========================================================
+   APPEARANCE
+   ========================================================= */
+
+.settings-appearance {
+  width: 100%;
+}
+
+.settings-theme-select {
+  width: 150px;
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   DANGER ZONE
+   ========================================================= */
+
+.settings-card--danger {
+  border-color: rgba(255, 92, 92, 0.28);
+}
+
+.settings-card--danger .card__title {
+  color: var(--high-risk);
+}
+
+.settings-danger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.settings-danger strong {
+  display: block;
+
+  margin-bottom: var(--space-2);
+
+  color: var(--text-primary);
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+}
+
+.settings-danger p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.settings-toast {
+  position: fixed;
+
+  right: var(--space-6);
+  bottom: var(--space-6);
+
+  z-index: 1000;
+
+  min-width: 260px;
+
+  padding: var(--space-3) var(--space-4);
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+
+  background-color: var(--card);
+
+  color: var(--text-primary);
+
+  box-shadow: var(--shadow-md);
+
+  font-size: var(--text-sm);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(10px);
+
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast),
+    visibility var(--transition-fast);
+}
+
+.settings-toast--visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   PASSWORD MODAL
+   ========================================================= */
+
+.settings-modal {
+  position: fixed;
+  inset: 0;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--space-6);
+
+  background-color: rgba(7, 4, 20, 0.72);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity var(--transition-fast),
+    visibility var(--transition-fast);
+}
+
+.settings-modal--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.settings-modal__box {
+  width: 100%;
+  max-width: 460px;
+
+  padding: var(--space-6);
+
+  background-color: var(--card);
+
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow-md);
+
+  transform: translateY(8px);
+
+  transition: transform var(--transition-fast);
+}
+
+.settings-modal--visible .settings-modal__box {
+  transform: translateY(0);
+}
+
+.settings-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  margin-bottom: var(--space-5);
+}
+
+.settings-modal__title {
+  color: var(--text-primary);
+
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+}
+
+.settings-modal__subtitle {
+  margin-top: var(--space-1);
+
+  color: var(--text-secondary);
+
+  font-size: var(--text-sm);
+}
+
+.settings-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: var(--radius-md);
+
+  color: var(--text-secondary);
+
+  font-size: 20px;
+
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.settings-modal__close:hover {
+  background-color: var(--accent-muted);
+  color: var(--text-primary);
+}
+
+.settings-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+
+  margin-top: var(--space-5);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .settings-row {
+    align-items: flex-start;
+  }
+
+  .settings-danger {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .settings-danger .btn {
+    width: 100%;
+  }
+
+  .settings-theme-select {
+    width: 130px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .settings-page__header .content__title {
+    font-size: var(--text-xl);
+  }
+
+  .settings-profile__avatar {
+    align-items: flex-start;
+  }
+
+  .settings-profile__form .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-row {
+    flex-wrap: wrap;
+  }
+
+  .settings-row__content {
+    min-width: calc(100% - 56px);
+  }
+
+  .settings-row > .toggle,
+  .settings-row > .btn,
+  .settings-row > .form-select {
+    margin-left: 56px;
+  }
+
+  .settings-card__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .settings-card__actions .btn {
+    width: 100%;
+  }
+
+  .settings-toast {
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    min-width: 0;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .settings-card {
+    padding: var(--space-4);
+  }
+
+  .settings-row__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .settings-row__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .settings-theme-select {
+    width: 100%;
+  }
+
+}
+/* =========================================================
+   ACTIVE SETTINGS SIDEBAR LINK
+   ========================================================= */
+
+.sidebar__link.sidebar__link--active {
+  position: relative;
+  background-color: var(--accent-muted);
+  color: #FFFFFF;
+}
+
+.sidebar__link.sidebar__link--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background-color: var(--accent);
+}
+
+.sidebar__link.sidebar__link--active .sidebar__link-icon {
+  color: #FFFFFF;
+  opacity: 1;
+}
