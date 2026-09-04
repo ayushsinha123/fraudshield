@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -18,12 +17,17 @@ class TransactionModel:
     Loads the frozen Notebook 02 production XGBoost model and
     reproduces the exact 21-feature preprocessing pipeline.
 
+    A separately trained Platt calibration model is applied to
+    the raw XGBoost fraud probability before converting it into
+    the human-facing transaction risk score.
+
     Important:
     - Balance-derived PaySim features are NOT used.
     - nameDest is NOT passed directly to XGBoost.
     - nameDest is used only to maintain causal recipient history.
     - Recipient state is updated AFTER the current transaction
       is scored.
+    - The original XGBoost model artifact is never modified.
     """
 
     TRANSACTION_TYPES = [
@@ -61,7 +65,12 @@ class TransactionModel:
     def __init__(
         self,
         model_path: Optional[str | Path] = None,
+        calibrator_path: Optional[str | Path] = None,
     ) -> None:
+
+        # ---------------------------------------------------------
+        # Transaction model artifact
+        # ---------------------------------------------------------
 
         if model_path is None:
             model_path = (
@@ -79,6 +88,31 @@ class TransactionModel:
                 f"Transaction model artifact not found: "
                 f"{self.model_path}"
             )
+
+        # ---------------------------------------------------------
+        # Platt calibration artifact
+        # ---------------------------------------------------------
+
+        if calibrator_path is None:
+            calibrator_path = (
+                Path(__file__).resolve()
+                .parents[3]
+                / "models"
+                / "transaction"
+                / "transaction_platt_calibrator.joblib"
+            )
+
+        self.calibrator_path = Path(calibrator_path)
+
+        if not self.calibrator_path.exists():
+            raise FileNotFoundError(
+                f"Transaction calibrator artifact not found: "
+                f"{self.calibrator_path}"
+            )
+
+        # ---------------------------------------------------------
+        # Load frozen transaction model
+        # ---------------------------------------------------------
 
         artifact = joblib.load(self.model_path)
 
@@ -108,6 +142,10 @@ class TransactionModel:
 
         self.model = artifact["model"]
 
+        # ---------------------------------------------------------
+        # Validate feature schema
+        # ---------------------------------------------------------
+
         artifact_features = artifact["features"]
 
         if artifact_features != self.FEATURE_COLUMNS:
@@ -116,6 +154,10 @@ class TransactionModel:
                 f"Artifact features: {artifact_features}\n"
                 f"Expected features: {self.FEATURE_COLUMNS}"
             )
+
+        # ---------------------------------------------------------
+        # Load training statistics
+        # ---------------------------------------------------------
 
         training_stats = artifact[
             "training_statistics"
@@ -131,13 +173,39 @@ class TransactionModel:
             training_stats["global_amount_stats"]
         )
 
-        # Causal recipient state.
-        #
+        # ---------------------------------------------------------
+        # Load Platt calibrator
+        # ---------------------------------------------------------
+
+        self.calibrator = joblib.load(
+            self.calibrator_path
+        )
+
+        if not hasattr(
+            self.calibrator,
+            "predict_proba",
+        ):
+            raise ValueError(
+                "Invalid transaction calibrator: "
+                "expected an object with predict_proba()."
+            )
+
+        # ---------------------------------------------------------
+        # Causal recipient state
+        # ---------------------------------------------------------
+
         # key = recipient identifier
         # value = historical statistics
-        self.recipient_state: Dict[str, Dict[str, float]] = {}
 
-        # SHAP explainer is created once.
+        self.recipient_state: Dict[
+            str,
+            Dict[str, float],
+        ] = {}
+
+        # ---------------------------------------------------------
+        # SHAP explainer
+        # ---------------------------------------------------------
+
         self.explainer = shap.TreeExplainer(
             self.model
         )
@@ -145,11 +213,19 @@ class TransactionModel:
         print(
             "TransactionModel loaded successfully:"
         )
+
         print(
-            f"  artifact = {self.model_path}"
+            f"  model artifact = {self.model_path}"
         )
+
         print(
-            f"  features = {len(self.FEATURE_COLUMNS)}"
+            f"  calibrator artifact = "
+            f"{self.calibrator_path}"
+        )
+
+        print(
+            f"  features = "
+            f"{len(self.FEATURE_COLUMNS)}"
         )
 
     # ---------------------------------------------------------
@@ -179,7 +255,10 @@ class TransactionModel:
             ),
             "dest_prev_mean_amount": float(
                 state["amount_sum"]
-                / max(state["count"], 1.0)
+                / max(
+                    state["count"],
+                    1.0,
+                )
             ),
         }
 
@@ -189,7 +268,10 @@ class TransactionModel:
         amount: float,
     ) -> None:
 
-        if recipient_id not in self.recipient_state:
+        if (
+            recipient_id
+            not in self.recipient_state
+        ):
             self.recipient_state[
                 recipient_id
             ] = {
@@ -213,7 +295,10 @@ class TransactionModel:
         self,
         transaction: Dict[str, Any],
         update_history: bool = False,
-    ) -> tuple[pd.DataFrame, Dict[str, Any]]:
+    ) -> tuple[
+        pd.DataFrame,
+        Dict[str, Any],
+    ]:
 
         required = [
             "step",
@@ -230,7 +315,8 @@ class TransactionModel:
 
         if missing:
             raise ValueError(
-                f"Missing transaction fields: {missing}"
+                f"Missing transaction fields: "
+                f"{missing}"
             )
 
         step = int(
@@ -249,7 +335,10 @@ class TransactionModel:
             transaction["nameDest"]
         )
 
-        if transaction_type not in self.TRANSACTION_TYPES:
+        if (
+            transaction_type
+            not in self.TRANSACTION_TYPES
+        ):
             raise ValueError(
                 f"Unknown transaction type: "
                 f"{transaction_type}"
@@ -287,6 +376,7 @@ class TransactionModel:
         # -----------------------------------------------------
 
         hour = step % 24
+
         day = step // 24
 
         hour_sin = np.sin(
@@ -310,7 +400,9 @@ class TransactionModel:
                 "type_mean"
             ].get(
                 transaction_type,
-                self.global_stats["mean"],
+                self.global_stats[
+                    "mean"
+                ],
             )
         )
 
@@ -319,7 +411,9 @@ class TransactionModel:
                 "type_median"
             ].get(
                 transaction_type,
-                self.global_stats["median"],
+                self.global_stats[
+                    "median"
+                ],
             )
         )
 
@@ -336,7 +430,9 @@ class TransactionModel:
         amount_vs_global_median = (
             amount
             / (
-                self.global_stats["median"]
+                self.global_stats[
+                    "median"
+                ]
                 + 1.0
             )
         )
@@ -358,8 +454,7 @@ class TransactionModel:
         amount_vs_dest_history = (
             amount
             / (
-                prev_mean_amount
-                + 1.0
+                prev_mean_amount + 1.0
             )
         )
 
@@ -427,6 +522,7 @@ class TransactionModel:
 
         # Update recipient history ONLY after
         # feature construction.
+
         if update_history:
             self._update_recipient_history(
                 recipient_id,
@@ -480,6 +576,7 @@ class TransactionModel:
 
         # Only keep features pushing the
         # prediction toward fraud.
+
         positive = [
             (feature, float(value))
             for feature, value in pairs
@@ -513,8 +610,9 @@ class TransactionModel:
             )
 
         elif (
-            context["previous_recipient_count"]
-            > 0
+            context[
+                "previous_recipient_count"
+            ] > 0
             and amount_vs_dest >= 2.0
         ):
             reasons.append(
@@ -542,32 +640,47 @@ class TransactionModel:
                     f"detected: {amount:.2f}"
                 )
 
-            elif feature == "amount_vs_type_mean":
+            elif (
+                feature
+                == "amount_vs_type_mean"
+            ):
                 reasons.append(
                     "Amount is unusually high "
                     "for this transaction type"
                 )
 
-            elif feature == "amount_vs_type_median":
+            elif (
+                feature
+                == "amount_vs_type_median"
+            ):
                 reasons.append(
                     "Amount is well above the "
                     "typical median for this "
                     "transaction type"
                 )
 
-            elif feature == "amount_vs_global_median":
+            elif (
+                feature
+                == "amount_vs_global_median"
+            ):
                 reasons.append(
                     "Amount is unusually large "
                     "relative to typical transactions"
                 )
 
-            elif feature == "above_train_p95":
+            elif (
+                feature
+                == "above_train_p95"
+            ):
                 reasons.append(
                     "Transaction is above the "
                     "historical high-value threshold"
                 )
 
-            elif feature == "above_train_p99":
+            elif (
+                feature
+                == "above_train_p99"
+            ):
                 reasons.append(
                     "Transaction is in the extreme "
                     "high-value range"
@@ -586,8 +699,11 @@ class TransactionModel:
                 )
 
             elif feature == "type_TRANSFER":
+
                 if int(
-                    X.iloc[0]["type_TRANSFER"]
+                    X.iloc[0][
+                        "type_TRANSFER"
+                    ]
                 ) == 1:
                     reasons.append(
                         "Transfer transaction contributes "
@@ -595,8 +711,11 @@ class TransactionModel:
                     )
 
             elif feature == "type_CASH_OUT":
+
                 if int(
-                    X.iloc[0]["type_CASH_OUT"]
+                    X.iloc[0][
+                        "type_CASH_OUT"
+                    ]
                 ) == 1:
                     reasons.append(
                         "Cash-out transaction contributes "
@@ -604,8 +723,11 @@ class TransactionModel:
                     )
 
             elif feature == "type_PAYMENT":
+
                 if int(
-                    X.iloc[0]["type_PAYMENT"]
+                    X.iloc[0][
+                        "type_PAYMENT"
+                    ]
                 ) == 1:
                     reasons.append(
                         "Payment transaction contributes "
@@ -613,8 +735,11 @@ class TransactionModel:
                     )
 
             elif feature == "type_CASH_IN":
+
                 if int(
-                    X.iloc[0]["type_CASH_IN"]
+                    X.iloc[0][
+                        "type_CASH_IN"
+                    ]
                 ) == 1:
                     reasons.append(
                         "Cash-in transaction contributes "
@@ -622,8 +747,11 @@ class TransactionModel:
                     )
 
             elif feature == "type_DEBIT":
+
                 if int(
-                    X.iloc[0]["type_DEBIT"]
+                    X.iloc[0][
+                        "type_DEBIT"
+                    ]
                 ) == 1:
                     reasons.append(
                         "Debit transaction contributes "
@@ -653,13 +781,63 @@ class TransactionModel:
             update_history=update_history,
         )
 
-        probability = float(
-            self.model.predict_proba(X)[0, 1]
+        # -----------------------------------------------------
+        # Raw XGBoost probability
+        # -----------------------------------------------------
+
+        raw_probability = float(
+            self.model.predict_proba(
+                X
+            )[0, 1]
         )
 
-        transaction_risk = (
-            probability * 100.0
+        # -----------------------------------------------------
+        # Platt-calibrated probability
+        # -----------------------------------------------------
+
+        clipped_probability = np.clip(
+            raw_probability,
+            1e-7,
+            1.0 - 1e-7,
         )
+
+        logit_probability = np.log(
+            clipped_probability
+            / (1.0 - clipped_probability)
+        )
+
+        calibrated_probability = float(
+            self.calibrator.predict_proba(
+                np.array(
+                    [[logit_probability]],
+                    dtype=float,
+                )
+            )[0, 1]
+        )
+
+        calibrated_probability = float(
+            np.clip(
+                calibrated_probability,
+                0.0,
+                1.0,
+            )
+        )
+
+        # -----------------------------------------------------
+        # Human-facing transaction risk
+        # -----------------------------------------------------
+
+        transaction_risk = (
+            calibrated_probability * 100.0
+        )
+
+        # -----------------------------------------------------
+        # Existing risk bands
+        #
+        # These thresholds are intentionally
+        # preserved for now. They will be
+        # revalidated after multimodal testing.
+        # -----------------------------------------------------
 
         if transaction_risk >= 80:
             risk_level = "CRITICAL"
@@ -673,7 +851,14 @@ class TransactionModel:
         else:
             risk_level = "LOW"
 
+        # -----------------------------------------------------
         # SHAP
+        #
+        # SHAP remains based on the original
+        # XGBoost model because calibration is
+        # a post-model probability transformation.
+        # -----------------------------------------------------
+
         shap_values = (
             self.explainer.shap_values(X)
         )
@@ -684,13 +869,21 @@ class TransactionModel:
             context,
         )
 
+        # -----------------------------------------------------
+        # Final response
+        # -----------------------------------------------------
+
         return {
             "transaction_risk": round(
                 transaction_risk,
                 2,
             ),
-            "fraud_probability": round(
-                probability,
+            "raw_fraud_probability": round(
+                raw_probability,
+                6,
+            ),
+            "calibrated_fraud_probability": round(
+                calibrated_probability,
                 6,
             ),
             "risk_level": risk_level,
@@ -744,4 +937,9 @@ if __name__ == "__main__":
     )
 
     print("\nTransaction test result:")
-    print(json.dumps(result, indent=2))
+    print(
+        json.dumps(
+            result,
+            indent=2,
+        )
+    )

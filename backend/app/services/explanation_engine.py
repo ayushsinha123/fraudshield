@@ -249,9 +249,10 @@ class ExplanationEngine:
             reasons,
         )
 
-        # Rank reasons in the order they were
-        # supplied by the fusion engine.
-        top_reasons = reasons[:5]
+        # Preserve all deduplicated reasons supplied by
+        # the fusion engine so the API/frontend can show
+        # the complete multimodal explanation.
+        top_reasons = reasons
 
         return {
             "risk_score": round(
@@ -274,8 +275,17 @@ class ExplanationEngine:
                 component_risks
             ),
 
-            "weighted_contributions": (
+             "weighted_contributions": (
                 weighted_contributions
+            ),
+
+            "base_fusion_risk": risk_result.get(
+                "base_fusion_risk"
+            ),
+
+            "escalation_reasons": risk_result.get(
+                "escalation_reasons",
+                [],
             ),
 
             "requires_confirmation": (

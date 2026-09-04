@@ -1,28 +1,37 @@
+
+/* =========================================================
+   FRAUDSHIELD — NEW TRANSACTION
+   Real FastAPI integration
+   ========================================================= */
+
+const FRAUDSHIELD_API_BASE = "http://127.0.0.1:8000";
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("new-transaction-form");
 
   if (!form) return;
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const formData = new FormData(form);
 
     const transaction = {
       id: generateTransactionId(),
-      merchant: formData.get("merchant"),
-      customer: formData.get("customer"),
+      merchant: String(formData.get("merchant") || "").trim(),
+      customer: String(formData.get("customer") || "").trim(),
       amount: Number(formData.get("amount")),
-      currency: formData.get("currency"),
-      location: formData.get("location"),
-      category: formData.get("category"),
-      description: formData.get("description"),
+      currency: String(formData.get("currency") || "INR"),
+      location: String(formData.get("location") || "").trim(),
+      category: String(formData.get("category") || "other"),
+      description: String(formData.get("description") || "").trim(),
       date: new Date().toISOString(),
       status: "pending",
       riskLevel: "low"
     };
 
-    analyzeTransaction(transaction);
+    await analyzeTransaction(transaction);
   });
 });
 
@@ -42,118 +51,177 @@ function generateTransactionId() {
 
 
 /* =========================================================
+   BUILD BACKEND REQUEST
+   ========================================================= */
+
+function buildRiskPayload(transaction) {
+  /*
+   * The current UI represents a normal merchant payment.
+   *
+   * Backend contract requires:
+   *   step
+   *   type
+   *   amount
+   *   nameDest
+   *   behaviour
+   *   device
+   *   voice
+   *
+   * We use PAYMENT for this page because the existing form
+   * does not currently expose a UPI transaction-type selector.
+   */
+
+  return {
+    step: new Date().getHours(),
+
+    type: "PAYMENT",
+
+    amount: transaction.amount,
+
+    /*
+     * In this UI the merchant is the payment destination.
+     */
+    nameDest: transaction.merchant,
+
+    behaviour: {
+      new_recipient: 0,
+      new_device: 0,
+      unusual_hour: 0,
+      burst: 0,
+      location_jump: 0,
+      network_change: 0
+    },
+
+    device: {
+      new_device: false,
+      network_change: false,
+      location_jump: false,
+      sim_change: false
+    },
+
+    voice: null
+  };
+}
+
+
+/* =========================================================
    FRAUDSHIELD RISK ANALYSIS
    ========================================================= */
 
-function analyzeTransaction(transaction) {
+async function analyzeTransaction(transaction) {
+  const result = getOrCreateResultContainer();
 
-  let score = 0;
-  const reasons = [];
+  setLoadingState(result);
 
-  /* Amount Risk */
+  try {
+    const payload = buildRiskPayload(transaction);
 
-  if (transaction.amount >= 10000) {
-    score += 40;
-    reasons.push("Extremely high transaction amount");
-  } 
-  else if (transaction.amount >= 5000) {
-    score += 30;
-    reasons.push("High transaction amount");
-  } 
-  else if (transaction.amount >= 2000) {
-    score += 15;
-    reasons.push("Unusually large transaction amount");
+    const response = await fetch(
+      `${FRAUDSHIELD_API_BASE}/api/v1/risk-score`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    if (!response.ok) {
+      let errorMessage = `API request failed (${response.status})`;
+
+      try {
+        const errorBody = await response.json();
+
+        if (typeof errorBody.detail === "string") {
+          errorMessage = errorBody.detail;
+        }
+      } catch (_) {
+        // Keep the default error message.
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    const riskResponse = await response.json();
+
+    /*
+     * Keep the locally-generated transaction ID because the current
+     * backend response may not yet assign a database transaction ID.
+     */
+    transaction.backendResponse = riskResponse;
+
+    transaction.riskScore = Number(riskResponse.risk_score || 0);
+
+    transaction.riskLevel = String(
+      riskResponse.risk_level || "LOW"
+    ).toLowerCase();
+
+    transaction.status = getTransactionStatus(
+      riskResponse
+    );
+
+    transaction.date = new Date().toISOString();
+
+    saveTransaction(transaction);
+
+    showResult(
+      transaction,
+      riskResponse
+    );
+
+  } catch (error) {
+    console.error(
+      "FraudShield risk analysis failed:",
+      error
+    );
+
+    showError(
+      result,
+      error instanceof Error
+        ? error.message
+        : "Unable to connect to FraudShield API."
+    );
   }
+}
 
 
-  /* Location Risk */
+/* =========================================================
+   STATUS MAPPING
+   ========================================================= */
 
-  const location = transaction.location.trim().toLowerCase();
+function getTransactionStatus(riskResponse) {
+  const riskLevel = String(
+    riskResponse.risk_level || "LOW"
+  ).toUpperCase();
 
   if (
-    location === "unknown" ||
-    location === "nigeria" ||
-    location === "russia"
+    riskLevel === "CRITICAL" ||
+    riskLevel === "HIGH"
   ) {
-    score += 25;
-    reasons.push("Suspicious transaction location");
+    return "flagged";
   }
 
-
-  /* Missing Description */
-
-  if (!transaction.description.trim()) {
-    score += 5;
-    reasons.push("Transaction description is missing");
+  if (riskLevel === "MEDIUM") {
+    return "review";
   }
 
-
-  /* Maximum Score */
-
-  score = Math.min(score, 100);
-
-
-  /* Risk Level */
-
-  let riskLevel = "low";
-
-  if (score >= 70) {
-    riskLevel = "critical";
-  } 
-  else if (score >= 40) {
-    riskLevel = "high";
-  } 
-  else if (score >= 20) {
-    riskLevel = "medium";
-  }
-
-
-  if (reasons.length === 0) {
-    reasons.push("No significant risk indicators detected");
-  }
-
-
-  /* Update Transaction */
-
-  transaction.riskLevel = riskLevel;
-
-
-  if (
-    riskLevel === "critical" ||
-    riskLevel === "high"
-  ) {
-    transaction.status = "flagged";
-  } 
-  else if (riskLevel === "medium") {
-    transaction.status = "review";
-  } 
-  else {
-    transaction.status = "approved";
-  }
-
-
-  /* Save */
-
-  saveTransaction(transaction);
-
-
-  /* Display */
-
-  showResult(
-    transaction,
-    score,
-    riskLevel,
-    reasons
-  );
+  return "approved";
 }
 
 
 /* =========================================================
    SAVE TRANSACTION
+   =========================================================
+   
+   LocalStorage is retained temporarily so the existing frontend
+   history pages continue to have something to display.
+
+   This is NOT the final persistence layer.
+   The eventual source of truth will be the backend database.
    ========================================================= */
 
 function saveTransaction(transaction) {
-
   const existingTransactions =
     JSON.parse(
       localStorage.getItem(
@@ -161,17 +229,12 @@ function saveTransaction(transaction) {
       )
     ) || [];
 
-
   existingTransactions.push(transaction);
-
 
   localStorage.setItem(
     "fraudshield_new_transactions",
-    JSON.stringify(
-      existingTransactions
-    )
+    JSON.stringify(existingTransactions)
   );
-
 
   console.log(
     "FraudShield transaction saved:",
@@ -181,72 +244,246 @@ function saveTransaction(transaction) {
 
 
 /* =========================================================
-   DISPLAY RESULT
+   RESULT CONTAINER
    ========================================================= */
 
-function showResult(
-  transaction,
-  score,
-  riskLevel,
-  reasons
-) {
-
+function getOrCreateResultContainer() {
   let result =
     document.getElementById(
       "transaction-risk-result"
     );
 
+  if (result) {
+    return result;
+  }
 
-  if (!result) {
+  result = document.createElement("section");
 
-    result =
-      document.createElement("section");
+  result.id = "transaction-risk-result";
 
-    result.id =
-      "transaction-risk-result";
+  result.className =
+    "transaction-risk-result";
 
-    result.className =
-      "transaction-risk-result";
+  const form =
+    document.getElementById(
+      "new-transaction-form"
+    );
 
-
-    const form =
-      document.getElementById(
-        "new-transaction-form"
-      );
-
-
+  if (form && form.parentElement) {
     form.parentElement.insertAdjacentElement(
       "afterend",
       result
     );
   }
 
+  return result;
+}
 
-  /* Badge */
+
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
+
+function setLoadingState(result) {
+  result.innerHTML = `
+    <div class="risk-result-card">
+      <div class="risk-result-card__header">
+        <div>
+          <span class="risk-result-card__label">
+            FRAUDSHIELD ANALYSIS
+          </span>
+
+          <h3>
+            Analyzing Transaction
+          </h3>
+        </div>
+      </div>
+
+      <div class="risk-result-details">
+        <div>
+          <span>Status</span>
+          <strong>Running risk analysis...</strong>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   ERROR STATE
+   ========================================================= */
+
+function showError(result, message) {
+  result.innerHTML = `
+    <div class="risk-result-card">
+      <div class="risk-result-card__header">
+        <div>
+          <span class="risk-result-card__label">
+            FRAUDSHIELD
+          </span>
+
+          <h3>
+            Risk Analysis Failed
+          </h3>
+        </div>
+
+        <span class="risk-result-badge risk-result-badge--high">
+          ERROR
+        </span>
+      </div>
+
+      <div class="risk-reasons">
+        <h4>Unable to analyze transaction</h4>
+
+        <ul>
+          <li>${escapeHtml(message)}</li>
+        </ul>
+      </div>
+
+      <div class="risk-result-details">
+        <div>
+          <span>API</span>
+          <strong>${FRAUDSHIELD_API_BASE}</strong>
+        </div>
+      </div>
+    </div>
+  `;
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+
+/* =========================================================
+   DISPLAY RESULT
+   ========================================================= */
+
+function showResult(
+  transaction,
+  riskResponse
+) {
+  const result =
+    getOrCreateResultContainer();
+
+  const score = Number(
+    riskResponse.risk_score || 0
+  );
+
+  const riskLevel = String(
+    riskResponse.risk_level || "LOW"
+  ).toLowerCase();
+
+  const headline =
+    riskResponse.headline ||
+    `${riskLevel.toUpperCase()} RISK`;
+
+  const summary =
+    riskResponse.summary ||
+    "";
+
+  const message =
+    riskResponse.message ||
+    "";
+
+  const reasons =
+    Array.isArray(riskResponse.reasons)
+      ? riskResponse.reasons
+      : [];
+
+  const componentRisks =
+    riskResponse.component_risks || {};
+
+  const requiresConfirmation =
+    Boolean(
+      riskResponse.requires_confirmation
+    );
+
+  const highFriction =
+    Boolean(
+      riskResponse.high_friction
+    );
+
+  const normalizedRiskLevel =
+    riskLevel.toLowerCase();
 
   let badgeClass = "safe";
 
-  if (riskLevel === "medium") {
+  if (normalizedRiskLevel === "medium") {
     badgeClass = "medium";
   }
 
   if (
-    riskLevel === "high" ||
-    riskLevel === "critical"
+    normalizedRiskLevel === "high" ||
+    normalizedRiskLevel === "critical"
   ) {
     badgeClass = "high";
   }
 
+  const safeReasons =
+    reasons.length > 0
+      ? reasons
+      : ["No significant risk indicators detected"];
 
-  /* Result HTML */
+  const componentHtml = Object.entries(
+    componentRisks
+  )
+    .map(
+      ([name, value]) => `
+        <div>
+          <span>${formatComponentName(name)}</span>
+          <strong>${Number(value).toFixed(2)}</strong>
+        </div>
+      `
+    )
+    .join("");
+
+  const confirmationHtml =
+    requiresConfirmation
+      ? `
+        <div class="risk-reasons">
+          <h4>
+            Confirmation Required
+          </h4>
+
+          <p>
+            ${escapeHtml(
+              highFriction
+                ? "This transaction requires explicit confirmation because multiple strong risk signals were detected."
+                : "Please review the risk indicators before continuing."
+            )}
+          </p>
+
+          <div
+            class="new-transaction-form__actions"
+            style="margin-top: 1rem;"
+          >
+            <button
+              type="button"
+              class="btn btn--secondary"
+              id="fraudshield-cancel-btn"
+            >
+              Cancel Transaction
+            </button>
+
+            <button
+              type="button"
+              class="btn btn--primary"
+              id="fraudshield-confirm-btn"
+            >
+              I Understand — Continue
+            </button>
+          </div>
+        </div>
+      `
+      : "";
 
   result.innerHTML = `
-
     <div class="risk-result-card">
 
-
       <div class="risk-result-card__header">
-
         <div>
 
           <span class="risk-result-card__label">
@@ -254,16 +491,17 @@ function showResult(
           </span>
 
           <h3>
-            Transaction Risk Result
+            ${escapeHtml(headline)}
           </h3>
 
         </div>
 
-
         <span
           class="risk-result-badge risk-result-badge--${badgeClass}"
         >
-          ${riskLevel.toUpperCase()}
+          ${escapeHtml(
+            normalizedRiskLevel.toUpperCase()
+          )}
         </span>
 
       </div>
@@ -276,95 +514,101 @@ function showResult(
         </span>
 
         <strong>
-          ${score}/100
+          ${score.toFixed(2)}/100
         </strong>
 
       </div>
 
 
+      ${
+        summary
+          ? `
+            <div class="risk-reasons">
+              <h4>Assessment</h4>
+              <p>
+                ${escapeHtml(summary)}
+              </p>
+            </div>
+          `
+          : ""
+      }
+
+
+      ${
+        message
+          ? `
+            <div class="risk-reasons">
+              <h4>Recommendation</h4>
+              <p>
+                ${escapeHtml(message)}
+              </p>
+            </div>
+          `
+          : ""
+      }
+
+
       <div class="risk-result-details">
 
-
         <div>
-
-          <span>
-            Transaction ID
-          </span>
-
+          <span>Transaction ID</span>
           <strong>
-            ${transaction.id}
+            ${escapeHtml(transaction.id)}
           </strong>
-
         </div>
 
-
         <div>
-
-          <span>
-            Merchant
-          </span>
-
+          <span>Merchant</span>
           <strong>
-            ${transaction.merchant}
+            ${escapeHtml(transaction.merchant)}
           </strong>
-
         </div>
 
-
         <div>
-
-          <span>
-            Customer
-          </span>
-
+          <span>Customer</span>
           <strong>
-            ${transaction.customer}
+            ${escapeHtml(transaction.customer)}
           </strong>
-
         </div>
 
-
         <div>
-
-          <span>
-            Amount
-          </span>
-
+          <span>Amount</span>
           <strong>
-            ${transaction.currency}
+            ${escapeHtml(transaction.currency)}
             ${transaction.amount.toFixed(2)}
           </strong>
-
         </div>
-
 
         <div>
-
-          <span>
-            Location
-          </span>
-
+          <span>Location</span>
           <strong>
-            ${transaction.location}
+            ${escapeHtml(transaction.location)}
           </strong>
-
         </div>
-
 
         <div>
-
-          <span>
-            Status
-          </span>
-
-          <strong>
-            ${transaction.status.toUpperCase()}
+          <span>Status</span>
+          <strong
+            id="fraudshield-transaction-status"
+          >
+            ${escapeHtml(
+              transaction.status.toUpperCase()
+            )}
           </strong>
-
         </div>
-
 
       </div>
+
+
+      ${
+        Object.keys(componentRisks).length > 0
+          ? `
+            <div class="risk-result-details">
+              ${componentHtml}
+            </div>
+          `
+          : ""
+      }
 
 
       <div class="risk-reasons">
@@ -373,28 +617,207 @@ function showResult(
           Risk Indicators
         </h4>
 
-
         <ul>
-
-          ${reasons
+          ${safeReasons
             .map(
-              reason =>
-                `<li>${reason}</li>`
+              (reason) =>
+                `<li>${escapeHtml(String(reason))}</li>`
             )
             .join("")}
-
         </ul>
 
       </div>
 
 
-    </div>
+      ${confirmationHtml}
 
+    </div>
   `;
+
+
+  attachConfirmationHandlers(
+    transaction,
+    result,
+    requiresConfirmation
+  );
 
 
   result.scrollIntoView({
     behavior: "smooth",
     block: "start"
   });
+}
+
+
+/* =========================================================
+   CONFIRMATION / CANCEL
+   ========================================================= */
+
+function attachConfirmationHandlers(
+  transaction,
+  result,
+  requiresConfirmation
+) {
+  if (!requiresConfirmation) {
+    return;
+  }
+
+  const confirmButton =
+    document.getElementById(
+      "fraudshield-confirm-btn"
+    );
+
+  const cancelButton =
+    document.getElementById(
+      "fraudshield-cancel-btn"
+    );
+
+  const statusElement =
+    document.getElementById(
+      "fraudshield-transaction-status"
+    );
+
+
+  if (confirmButton) {
+    confirmButton.addEventListener(
+      "click",
+      () => {
+        transaction.status = "authorized";
+
+        if (statusElement) {
+          statusElement.textContent =
+            "AUTHORIZED";
+        }
+
+        updateStoredTransaction(
+          transaction
+        );
+
+        showDecisionMessage(
+          result,
+          "Transaction continued",
+          "The user explicitly acknowledged the warning and continued with the transaction."
+        );
+      }
+    );
+  }
+
+
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      () => {
+        transaction.status = "cancelled";
+
+        if (statusElement) {
+          statusElement.textContent =
+            "CANCELLED";
+        }
+
+        updateStoredTransaction(
+          transaction
+        );
+
+        showDecisionMessage(
+          result,
+          "Transaction cancelled",
+          "The transaction was stopped after the FraudShield warning."
+        );
+      }
+    );
+  }
+}
+
+
+/* =========================================================
+   DECISION MESSAGE
+   ========================================================= */
+
+function showDecisionMessage(
+  result,
+  title,
+  message
+) {
+  const existing =
+    result.querySelector(
+      ".fraudshield-decision-message"
+    );
+
+  if (existing) {
+    existing.remove();
+  }
+
+  const section =
+    document.createElement("div");
+
+  section.className =
+    "risk-reasons fraudshield-decision-message";
+
+  section.innerHTML = `
+    <h4>
+      ${escapeHtml(title)}
+    </h4>
+
+    <p>
+      ${escapeHtml(message)}
+    </p>
+  `;
+
+  result
+    .querySelector(".risk-result-card")
+    ?.appendChild(section);
+}
+
+
+/* =========================================================
+   UPDATE LOCAL TRANSACTION
+   ========================================================= */
+
+function updateStoredTransaction(
+  transaction
+) {
+  const transactions =
+    JSON.parse(
+      localStorage.getItem(
+        "fraudshield_new_transactions"
+      )
+    ) || [];
+
+  const index =
+    transactions.findIndex(
+      (item) =>
+        item.id === transaction.id
+    );
+
+  if (index !== -1) {
+    transactions[index] = transaction;
+
+    localStorage.setItem(
+      "fraudshield_new_transactions",
+      JSON.stringify(transactions)
+    );
+  }
+}
+
+
+/* =========================================================
+   FORMAT HELPERS
+   ========================================================= */
+
+function formatComponentName(name) {
+  return String(name)
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) =>
+      char.toUpperCase()
+    );
+}
+
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }

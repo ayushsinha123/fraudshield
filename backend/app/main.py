@@ -257,6 +257,16 @@ def calculate_risk(request: TransactionRequest) -> RiskResponse:
             weighted_contributions=(
                 explanation["weighted_contributions"]
             ),
+
+            base_fusion_risk=explanation.get(
+                "base_fusion_risk"
+            ),
+
+            escalation_reasons=explanation.get(
+                "escalation_reasons",
+                [],
+            ),
+
             requires_confirmation=(
                 explanation["requires_confirmation"]
             ),
